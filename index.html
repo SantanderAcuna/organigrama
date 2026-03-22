@@ -377,15 +377,16 @@ h1 {
   <div class="leg"><div class="n n-ind">Ente descentralizado indirecto</div></div>
 </div>
 
-<!-- ========== TOP SECTION (Alcalde, Gabinete, Gerencias) ========== -->
+<!-- ========== TOP SECTION CON CONECTORES PERFECTAMENTE ALINEADOS ========== -->
 <div class="sec-box">
-  <div style="display:flex; align-items:flex-start;">
+  <div style="display: flex; align-items: flex-start; position: relative;">
 
-    <!-- LEFT: Gabinete -->
-    <div style="width:168px;flex-shrink:0;display:flex;flex-direction:column;gap:3px;padding-top:30px;">
+    <!-- IZQUIERDA: Gobierno y Gestión del Gabinete -->
+    <div style="width: 168px; flex-shrink: 0; display: flex; flex-direction: column; gap: 3px; padding-top: 0;">
       <div class="cblock">
         <div class="chead" data-color="sec">
-          <div class="n n-sec">Gobierno y Gestión del Gabinete</div><div class="ctoggle">▼</div>
+          <div class="n n-sec">Gobierno y Gestión del Gabinete</div>
+          <div class="ctoggle">▼</div>
         </div>
         <div class="cbody"><div class="cbody-inner">
           <div class="cblock">
@@ -407,47 +408,59 @@ h1 {
       </div>
     </div>
 
-    <div style="padding-top:38px;flex-shrink:0;width:28px;display:flex;align-items:center;"><div class="hl" style="width:100%;"></div></div>
+    <!-- CONECTOR HORIZONTAL IZQUIERDO: línea que conecta la rama izquierda con el centro -->
+    <div style="padding-top: 28px; flex-shrink: 0; width: 30px; display: flex; align-items: center;">
+      <div class="hl" style="width: 100%;"></div>
+    </div>
 
-    <!-- CENTER: ALCALDE + GERENCIAS -->
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
-      <div style="display:flex;align-items:center;width:100%;">
-        <div class="hl" style="flex:1;"></div>
-        <div class="n n-alcalde" style="flex-shrink:0;margin:0 10px;">Alcalde</div>
-        <div class="hl" style="flex:1;"></div>
+    <!-- CENTRO: Alcalde + Gerencias (alineación vertical exacta) -->
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+      <!-- Fila del Alcalde con líneas horizontales a ambos lados -->
+      <div style="display: flex; align-items: center; width: 100%;">
+        <div class="hl" style="flex: 1;"></div>
+        <div class="n n-alcalde" style="flex-shrink: 0; margin: 0 12px;">Alcalde</div>
+        <div class="hl" style="flex: 1;"></div>
       </div>
-      <div class="vl" style="height:8px;"></div>
-      <div style="width:78%;position:relative;margin-bottom:4px;">
+      <!-- Línea vertical descendente desde Alcalde -->
+      <div class="vl" style="height: 12px;"></div>
+      <!-- Barra horizontal con conectores verticales hacia cada gerencia -->
+      <div style="width: 85%; position: relative; margin: 2px 0 5px;">
         <div class="hl"></div>
-        <div style="display:flex;justify-content:space-between;position:relative;top:-1px;">
-          <div class="vl" style="height:7px;"></div><div class="vl" style="height:7px;"></div>
-          <div class="vl" style="height:7px;"></div><div class="vl" style="height:7px;"></div>
-          <div class="vl" style="height:7px;"></div>
+        <div style="display: flex; justify-content: space-between; position: relative; top: -4px;">
+          <div class="vl" style="height: 8px;"></div>
+          <div class="vl" style="height: 8px;"></div>
+          <div class="vl" style="height: 8px;"></div>
+          <div class="vl" style="height: 8px;"></div>
+          <div class="vl" style="height: 8px;"></div>
         </div>
       </div>
-      <div style="width:100%;display:flex;flex-direction:column;gap:3px;">
-        <div style="display:flex;align-items:flex-start;gap:5px;">
-          <div style="flex:0 0 228px;"><div class="n n-ger">Gerencia de Corregimientos</div></div>
-          <div class="hl" style="width:20px;flex-shrink:0;margin-top:12px;"></div>
-          <div style="flex:0 0 195px;"><div class="n n-ger">Gerencia Étnica</div></div>
-          <div style="flex:1;"></div>
+      <!-- Lista de Gerencias (alineadas con los ticks verticales) -->
+      <div style="width: 100%; display: flex; flex-direction: column; gap: 5px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="flex: 0 0 230px;"><div class="n n-ger">Gerencia de Corregimientos</div></div>
+          <div style="flex: 0 0 20px;"></div>
+          <div style="flex: 0 0 200px;"><div class="n n-ger">Gerencia Étnica</div></div>
+          <div style="flex: 1;"></div>
         </div>
-        <div style="display:flex;align-items:flex-start;gap:5px;">
-          <div style="flex:0 0 278px;"><div class="n n-ger">Gerencia del Centro y Territorios Estratégicos</div></div>
-          <div class="hl" style="width:20px;flex-shrink:0;margin-top:12px;"></div>
-          <div style="flex:1;"><div class="n n-ger">Gerencia de Diversidades Sexuales e Identidades de Género</div></div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="flex: 0 0 280px;"><div class="n n-ger">Gerencia del Centro y Territorios Estratégicos</div></div>
+          <div style="flex: 0 0 20px;"></div>
+          <div style="flex: 1;"><div class="n n-ger">Gerencia de Diversidades Sexuales e Identidades de Género</div></div>
         </div>
-        <div style="display:flex;">
-          <div style="flex:0 0 228px;"><div class="n n-ger">Gerencia de Proyectos Estratégicos</div></div>
-          <div style="flex:1;"></div>
+        <div style="display: flex;">
+          <div style="flex: 0 0 230px;"><div class="n n-ger">Gerencia de Proyectos Estratégicos</div></div>
+          <div style="flex: 1;"></div>
         </div>
       </div>
     </div>
 
-    <div style="padding-top:38px;flex-shrink:0;width:28px;display:flex;align-items:center;"><div class="hl" style="width:100%;"></div></div>
+    <!-- CONECTOR HORIZONTAL DERECHO: línea que conecta el centro con la rama derecha -->
+    <div style="padding-top: 28px; flex-shrink: 0; width: 30px; display: flex; align-items: center;">
+      <div class="hl" style="width: 100%;"></div>
+    </div>
 
-    <!-- RIGHT: Secretaría -->
-    <div style="width:218px;flex-shrink:0;display:flex;flex-direction:column;gap:3px;padding-top:30px;">
+    <!-- DERECHA: Secretaría / Departamento Administrativo -->
+    <div style="width: 218px; flex-shrink: 0; display: flex; flex-direction: column; gap: 3px; padding-top: 0;">
       <div class="cblock">
         <div class="chead" data-color="sub">
           <div class="n n-sub">Evaluación y Control</div><div class="ctoggle">▼</div>
@@ -461,7 +474,7 @@ h1 {
   </div>
 </div>
 
-<!-- SECRETARÍAS FILA 1 -->
+<!-- SECRETARÍAS FILA 1 (estructura de columnas con líneas verticales) -->
 <div class="sec-box"><div class="sec-columns">
   <div class="sec-col"><div class="cblock"><div class="chead" data-color="sec"><div class="n n-sec">Paz y Derechos Humanos</div><div class="ctoggle">▼</div></div><div class="cbody"><div class="cbody-inner"><div class="n n-sub">Justicia Transicional y Restaurativa</div><div class="n n-sub">Derechos Humanos y Construcción de Paz Ciudadana</div></div></div></div></div>
   <div class="sec-col"><div class="cblock"><div class="chead" data-color="sec"><div class="n n-sec">General</div><div class="ctoggle">▼</div></div><div class="cbody"><div class="cbody-inner"><div class="n n-sub">Prevención del Daño Antijurídico</div><div class="n n-sub">Defensa y Protección de lo Público</div></div></div></div></div>
