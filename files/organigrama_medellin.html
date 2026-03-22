@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estructura Administrativa del Distrito de Medellín</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ddd;
+  overflow: hidden;
+}
+
+#ctrl {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 9999;
+  background: white;
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: 0 3px 14px rgba(0,0,0,.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+  user-select: none;
+}
+#ctrl button {
+  width: 28px; height: 28px;
+  font-size: 18px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold;
+  color: #333;
+}
+#ctrl button:hover { background: #e0e0e0; }
+#ctrl span { font-size: 12px; min-width: 40px; text-align: center; color: #444; font-weight: bold; }
+#ctrl .hint { font-size: 10px; color: #888; border-left: 1px solid #ddd; padding-left: 8px; }
+
+#wrapper {
+  overflow: auto;
+  width: 100vw;
+  height: 100vh;
+  cursor: grab;
+  user-select: none;
+}
+#wrapper.grabbing { cursor: grabbing; }
+
+#chart {
+  transform-origin: 0 0;
+  display: inline-block;
+  width: 2120px;
+  background: white;
+  padding: 15px 12px 12px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+  margin-bottom: 10px;
+}
+
+:root {
+  --c-sec: #E05F58;
+  --c-ger: #7B4FA8;
+  --c-uae: #2A7A7A;
+  --c-sub: #9A9A9A;
+  --c-dir: #2A6B48;
+  --c-com: #4FBBDB;
+  --c-ads: #D88A28;
+  --c-vin: #3875C8;
+  --c-ind: #48B548;
+}
+
+.n {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3px 5px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  font-size: 7.5px;
+  line-height: 1.2;
+  min-height: 26px;
+  width: 100%;
+}
+.n-alcalde { background: #8C1B2E; font-size: 20px; font-weight: 900; border-radius: 14px; min-height: 44px; padding: 8px 28px; width: auto; display: inline-flex; }
+.n-sec  { background: var(--c-sec); }
+.n-ger  { background: var(--c-ger); }
+.n-uae  { background: var(--c-uae); }
+.n-sub  { background: var(--c-sub); }
+.n-dir  { background: var(--c-dir); }
+.n-com  { background: var(--c-com); color: #111; }
+.n-ads  { background: var(--c-ads); }
+.n-vin  { background: var(--c-vin); }
+.n-ind  { background: var(--c-ind); }
+
+/* LEGEND */
+.legend {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+  margin-bottom: 8px;
+}
+.leg .n {
+  font-size: 7px;
+  min-height: 20px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  width: auto;
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+/* SECTION BOXES */
+.sec-box {
+  border: 1.5px solid #aaa;
+  border-radius: 4px;
+  padding: 6px 5px 5px;
+  margin-bottom: 4px;
+}
+
+/* LINES */
+.vl { width: 1px; background: #666; margin: 0 auto; }
+.hl { height: 1px; background: #666; }
+
+/* COLUMNS */
+.sec-columns {
+  display: flex;
+  gap: 2px;
+  align-items: flex-start;
+}
+.sec-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.col-div {
+  width: 1.5px;
+  background: #aaa;
+  align-self: stretch;
+  flex-shrink: 0;
+  margin: 0 1px;
+}
+.ent-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+</style>
+</head>
+<body>
+
+<div id="ctrl">
+  <button id="zout">−</button>
+  <span id="zlbl">55%</span>
+  <button id="zin">+</button>
+  <button id="zreset" title="Restablecer vista">↺</button>
+  <span class="hint">Arrastrar para mover · Ctrl+rueda para zoom</span>
+</div>
+
+<div id="wrapper">
+<div id="chart">
+
+<h1>Estructura Administrativa del Distrito de Medellín</h1>
+
+<!-- LEYENDA -->
+<div class="legend">
+  <div class="leg"><div class="n n-sec">Secretaría / Departamento Administrativo</div></div>
+  <div class="leg"><div class="n n-ger">Gerencia</div></div>
+  <div class="leg"><div class="n n-uae">Unidad Administrativa Especial</div></div>
+  <div class="leg"><div class="n n-sub">Subsecretaría / Subdirección</div></div>
+  <div class="leg"><div class="n n-dir">Dirección</div></div>
+  <div class="leg"><div class="n n-com">Comisarías de Familia</div></div>
+  <div class="leg"><div class="n n-ads">Ente descentralizado adscrito</div></div>
+  <div class="leg"><div class="n n-vin">Ente descentralizado vinculado</div></div>
+  <div class="leg"><div class="n n-ind">Ente descentralizado indirecto</div></div>
+</div>
+
+<!-- TOP SECTION -->
+<div class="sec-box">
+  <div style="display:flex; align-items:flex-start;">
+
+    <!-- LEFT BRANCH -->
+    <div style="width:162px; flex-shrink:0; display:flex; flex-direction:column; gap:2px; padding-top:28px;">
+      <div class="n n-sec">Gobierno y Gestión del Gabinete</div>
+      <div class="vl" style="height:5px;"></div>
+      <div class="n n-sec">Privada</div>
+      <div class="vl" style="height:5px;"></div>
+      <div class="n n-sec">Comunicaciones</div>
+      <div class="vl" style="height:5px;"></div>
+      <div class="n n-sub">Comunicación Estratégica</div>
+    </div>
+
+    <!-- H-line left -->
+    <div style="padding-top:34px; flex-shrink:0; width:25px; display:flex; align-items:center;">
+      <div class="hl" style="width:100%;"></div>
+    </div>
+
+    <!-- CENTER -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:0;">
+
+      <!-- Alcalde row with h-lines -->
+      <div style="display:flex; align-items:center; width:100%;">
+        <div class="hl" style="flex:1;"></div>
+        <div class="n n-alcalde" style="flex-shrink:0; margin:0 8px;">Alcalde</div>
+        <div class="hl" style="flex:1;"></div>
+      </div>
+
+      <div class="vl" style="height:6px;"></div>
+
+      <!-- Gerencias -->
+      <div style="width:100%; display:flex; flex-direction:column; gap:3px;">
+
+        <div style="display:flex; align-items:center; gap:5px;">
+          <div style="flex:0 0 228px;"><div class="n n-ger">Gerencia de Corregimientos</div></div>
+          <div class="hl" style="width:18px; flex-shrink:0;"></div>
+          <div style="flex:0 0 210px;"><div class="n n-ger">Gerencia Étnica</div></div>
+          <div style="flex:1;"></div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:5px;">
+          <div style="flex:0 0 275px;"><div class="n n-ger">Gerencia del Centro y Territorios Estratégicos</div></div>
+          <div class="hl" style="width:18px; flex-shrink:0;"></div>
+          <div style="flex:1;"><div class="n n-ger">Gerencia de Diversidades Sexuales e Identidades de Género</div></div>
+        </div>
+
+        <div style="display:flex; align-items:center;">
+          <div style="flex:0 0 228px;"><div class="n n-ger">Gerencia de Proyectos Estratégicos</div></div>
+          <div style="flex:1;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- H-line right -->
+    <div style="padding-top:34px; flex-shrink:0; width:25px; display:flex; align-items:center;">
+      <div class="hl" style="width:100%;"></div>
+    </div>
+
+    <!-- RIGHT BRANCH -->
+    <div style="width:207px; flex-shrink:0; display:flex; flex-direction:column; gap:3px; padding-top:28px;">
+      <div class="n n-sub">Evaluación y Control</div>
+      <div class="vl" style="height:5px;"></div>
+      <div style="display:flex; gap:3px;">
+        <div style="flex:1;"><div class="n n-sub">Evaluación y Seguimiento</div></div>
+        <div style="flex:1;"><div class="n n-sub">Asesoría y Acompañamiento</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECRETARÍAS ROW 1 -->
+<div class="sec-box">
+  <div class="sec-columns">
+
+    <div class="sec-col">
+      <div class="n n-sec">Paz y Derechos Humanos</div>
+      <div class="n n-sub">Justicia Transicional y Restaurativa</div>
+      <div class="n n-sub">Derechos Humanos y Construcción de Paz Ciudadana</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">General</div>
+      <div class="n n-sub">Prevención del Daño Antijurídico</div>
+      <div class="n n-sub">Defensa y Protección de lo Público</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Gestión Humana y Servicio a la Ciudadanía</div>
+      <div class="n n-sub">Gestión Humana</div>
+      <div class="n n-sub">Servicio a la Ciudadanía</div>
+      <div class="n n-sub">Desarrollo Institucional</div>
+      <div class="n n-dir">Dirección de Control Disciplinario Interno</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Suministros y Servicios</div>
+      <div class="n n-sub">Planeación y Evaluación</div>
+      <div class="n n-sub">Selección y Gestión de Proveedores</div>
+      <div class="n n-sub">Ejecución de la Contratación</div>
+      <div class="n n-sub">Gestión de Bienes</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Educación</div>
+      <div class="n n-sub">Administrativa y Financiera</div>
+      <div class="n n-sub">Planeación Educativa</div>
+      <div class="n n-sub">Prestación del Servicio Educativo</div>
+      <div class="n n-uae">Unidad Administrativa Especial Buen Comienzo</div>
+      <div class="n n-sub" style="margin-left:8px;">Nutrición</div>
+      <div class="n n-sub" style="margin-left:8px;">Prestación del Servicio</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Participación Ciudadana</div>
+      <div class="n n-sub">Formación y Participación Ciudadana</div>
+      <div class="n n-sub">Organización Social</div>
+      <div class="n n-sub">Planeación Local y Presupuesto Participativo</div>
+    </div>
+
+    <div class="col-div"></div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Cultura Ciudadana</div>
+      <div class="n n-sub">Ciudadanía Cultural</div>
+      <div class="n n-sub">Arte y Cultura</div>
+      <div class="n n-sub">Biblioteca, Lectura y Patrimonio</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Salud</div>
+      <div class="n n-sub">Gestión de Servicios de Salud</div>
+      <div class="n n-sub">Salud Pública</div>
+      <div class="n n-sub">Administrativa y Financiera</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Inclusión Social y Familia</div>
+      <div class="n n-sub">Grupos Poblacionales</div>
+      <div class="n n-sub">Técnica de Inclusión Social</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Mujeres</div>
+      <div class="n n-sub">Derechos</div>
+      <div class="n n-sub">Transversalización</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Juventud</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECRETARÍAS ROW 2 -->
+<div class="sec-box">
+  <div class="sec-columns">
+
+    <div class="sec-col">
+      <div class="n n-sec">Turismo y Entretenimiento</div>
+      <div class="n n-sub">Planificación, Control y Competitividad Turística</div>
+      <div class="n n-sub">Promoción Turística y Entretenimiento</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Hacienda</div>
+      <div class="n n-sub">Ingresos</div>
+      <div class="n n-sub">Tesorería</div>
+      <div class="n n-sub">Presupuesto y Gestión Financiera</div>
+      <div class="n n-ads">Fonvalmed</div>
+      <div class="n n-ads">APEV</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Seguridad y Convivencia</div>
+      <div class="n n-sub">Planeación de la Seguridad</div>
+      <div class="n n-sub">Operativa de la Seguridad</div>
+      <div class="n n-sub">Espacio Público</div>
+      <div class="n n-sub">Gobierno Local y Convivencia</div>
+      <div class="n n-com">Comisarías de Familia</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Departamento Administrativo de Gestión del Riesgo de Desastres</div>
+      <div class="n n-sub">Conocimiento y Reducción del Riesgo</div>
+      <div class="n n-sub">Manejo de Desastres</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Infraestructura Física</div>
+      <div class="n n-sub">Planeación</div>
+      <div class="n n-sub">Construcción y Mantenimiento</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Medio Ambiente</div>
+      <div class="n n-sub">Gestión Ambiental</div>
+      <div class="n n-sub">Recursos Naturales Renovables</div>
+      <div class="n n-sub">Protección y Bienestar Animal</div>
+    </div>
+
+    <div class="col-div"></div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Movilidad</div>
+      <div class="n n-sub">Seguridad Vial y Control</div>
+      <div class="n n-sub">Legal</div>
+      <div class="n n-sub">Técnica</div>
+      <div class="n n-ger">Gerencia de Movilidad Humana</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Desarrollo Económico</div>
+      <div class="n n-sub">Desarrollo Rural</div>
+      <div class="n n-sub">Creación y Fortalecimiento Empresarial</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Innovación Digital</div>
+      <div class="n n-sub">Servicios de Tecnología de la Información</div>
+      <div class="n n-sub">Ciudad Inteligente</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Departamento Administrativo de Planeación</div>
+      <div class="n n-sub">Planeación Social y Económica</div>
+      <div class="n n-sub">Prospectiva, Información y Evaluación Estratégica</div>
+      <div class="n n-sub">Planeación Territorial y Estrategia de Ciudad</div>
+    </div>
+
+    <div class="sec-col">
+      <div class="n n-sec">Gestión y Control Territorial</div>
+      <div class="n n-sub">Control Urbanístico</div>
+      <div class="n n-sub">Catastro</div>
+      <div class="n n-sub">Servicios Públicos</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ENTIDADES ADSCRITAS Y VINCULADAS -->
+<div class="sec-box">
+  <div style="display:flex; gap:2px; align-items:flex-start;">
+
+    <div class="ent-col">
+      <div class="n n-ads">Colegio Mayor de Antioquia</div>
+      <div class="n n-ads">Museo Casa de la Memoria</div>
+      <div class="n n-ads">Isvimed</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-ads">I.U. Pascual Bravo</div>
+      <div class="n n-ads">Sapiencia</div>
+      <div class="n n-ads">Aeropuerto Olaya Herrera</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-ads">ITM</div>
+      <div class="n n-ads">Hospital General</div>
+      <div class="n n-ads">Agencia APP</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-ads">Inder</div>
+      <div class="n n-ads">Metrosalud</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-ads">Biblioteca Pública Piloto</div>
+    </div>
+
+    <div class="col-div"></div>
+
+    <div class="ent-col">
+      <div class="n n-vin">Metroparques</div>
+      <div class="n n-vin">Savia Salud</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-vin">ESU</div>
+      <div class="n n-vin">Plaza Mayor</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-vin">EDU</div>
+      <div class="n n-vin">Metroplus</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-vin">Metro</div>
+      <div class="n n-vin">Terminales</div>
+    </div>
+    <div class="ent-col">
+      <div class="n n-vin">EPM</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ENTIDADES INDIRECTAS -->
+<div class="sec-box">
+  <div style="display:flex; flex-wrap:wrap; gap:3px;">
+    <div class="n n-ind" style="flex:1; min-width:100px; width:auto;">Ferrocarril de Antioquia</div>
+    <div class="n n-ind" style="flex:1; min-width:85px; width:auto;">Parque Explora</div>
+    <div class="n n-ind" style="flex:1; min-width:128px; width:auto;">Corp. Hospital Infantil Concejo de Medellín</div>
+    <div class="n n-ind" style="flex:1; min-width:100px; width:auto;">Corp. Cuenca Verde</div>
+    <div class="n n-ind" style="flex:1; min-width:95px; width:auto;">Corp. Parque Arví</div>
+    <div class="n n-ind" style="flex:1; min-width:105px; width:auto;">Fund. Jardín Botánico</div>
+    <div class="n n-ind" style="flex:1; min-width:40px; width:auto;">ACI</div>
+    <div class="n n-ind" style="flex:1; min-width:50px; width:auto;">Ruta N</div>
+    <div class="n n-ind" style="flex:1; min-width:85px; width:auto;">Telemedellin</div>
+    <div class="n n-ind" style="flex:1; min-width:60px; width:auto;">Créame</div>
+    <div class="n n-ind" style="flex:1; min-width:90px; width:auto;">Teleantioquia</div>
+    <div class="n n-ind" style="flex:1; min-width:105px; width:auto;">Fondo de Garantías</div>
+    <div class="n n-ind" style="flex:1; min-width:55px; width:auto;">Bureau</div>
+  </div>
+</div>
+
+</div><!-- /chart -->
+</div><!-- /wrapper -->
+
+<script>
+(function () {
+  let scale = 0.55;
+  const chart = document.getElementById('chart');
+  const wrapper = document.getElementById('wrapper');
+  const zlbl = document.getElementById('zlbl');
+
+  function applyZoom() {
+    chart.style.transform = `scale(${scale})`;
+    zlbl.textContent = Math.round(scale * 100) + '%';
+  }
+
+  function zoom(delta) {
+    scale = Math.min(2.5, Math.max(0.2, scale + delta));
+    applyZoom();
+  }
+
+  function resetZoom() {
+    scale = 0.55;
+    applyZoom();
+    wrapper.scrollTop = 0;
+    wrapper.scrollLeft = 0;
+  }
+
+  document.getElementById('zout').addEventListener('click', () => zoom(-0.05));
+  document.getElementById('zin').addEventListener('click', () => zoom(0.05));
+  document.getElementById('zreset').addEventListener('click', resetZoom);
+
+  applyZoom();
+
+  // Drag to pan
+  let isDragging = false, startX, startY, sl, st;
+
+  wrapper.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    wrapper.classList.add('grabbing');
+    startX = e.clientX;
+    startY = e.clientY;
+    sl = wrapper.scrollLeft;
+    st = wrapper.scrollTop;
+  });
+  document.addEventListener('mouseup', () => { isDragging = false; wrapper.classList.remove('grabbing'); });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    wrapper.scrollLeft = sl - (e.clientX - startX);
+    wrapper.scrollTop = st - (e.clientY - startY);
+  });
+
+  // Ctrl + scroll to zoom
+  wrapper.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      zoom(e.deltaY > 0 ? -0.04 : 0.04);
+    }
+  }, { passive: false });
+})();
+</script>
+</body>
+</html>
