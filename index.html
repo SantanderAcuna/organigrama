@@ -293,6 +293,51 @@ h1 {
   min-width: 100px;
 }
 
+/* Estilos para los botones de colapso */
+.collapsible-header {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+}
+
+.collapse-icon {
+  font-size: 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.collapse-icon.expanded {
+  transform: rotate(0deg);
+}
+
+.collapse-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+.collapse-content {
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.collapse-content.collapsed {
+  display: none;
+}
+
+/* Ajustes para mantener el mismo aspecto */
+.n-sec.collapsible-header, .n-ger.collapsible-header, .n-uae.collapsible-header {
+  padding-right: 4px;
+}
+
 @keyframes panelEnter {
   from {
     opacity: 0;
@@ -359,9 +404,9 @@ h1 {
   <header class="topbar">
     <div class="title-wrap">
       <h1>Estructura Administrativa del Distrito de Medellín</h1>
-      <p>Jerarquía completa · Alcaldía, Secretarías, Gerencias y Entes descentralizados</p>
+      <p>Jerarquía completa · Haz clic en los títulos para expandir/colapsar dependencias</p>
     </div>
-    <div class="helper">🖱️ Arrastra para mover · Ctrl + rueda para zoom</div>
+    <div class="helper">🖱️ Arrastra para mover · Ctrl + rueda para zoom · 🔽 Colapsa secciones</div>
   </header>
 
   <div id="ctrl">
@@ -395,14 +440,16 @@ h1 {
         <div style="display:flex; align-items:flex-start; flex-wrap:wrap;">
 
           <!-- IZQUIERDA: Gobierno y Gestión del Gabinete -->
-          <div style="width:162px; flex-shrink:0; display:flex; flex-direction:column; gap:2px; padding-top:28px;">
-            <div class="n n-sec">Gobierno y Gestión del Gabinete</div>
-            <div class="vl" style="height:5px;"></div>
-            <div class="n n-sub">Privada</div>
-            <div class="vl" style="height:5px;"></div>
-            <div class="n n-sub">Comunicaciones</div>
-            <div class="vl" style="height:5px;"></div>
-            <div class="n n-sub">Comunicación Estratégica</div>
+          <div style="width:162px; flex-shrink:0; display:flex; flex-direction:column; gap:2px; padding-top:28px;" id="col-gabinete">
+            <div class="n n-sec collapsible-header" data-target="gabinete-content">Gobierno y Gestión del Gabinete</div>
+            <div id="gabinete-content" class="collapse-content">
+              <div class="vl" style="height:5px;"></div>
+              <div class="n n-sub">Privada</div>
+              <div class="vl" style="height:5px;"></div>
+              <div class="n n-sub">Comunicaciones</div>
+              <div class="vl" style="height:5px;"></div>
+              <div class="n n-sub">Comunicación Estratégica</div>
+            </div>
           </div>
 
           <div style="padding-top:34px; flex-shrink:0; width:25px; display:flex; align-items:center;"><div class="hl" style="width:100%;"></div></div>
@@ -417,18 +464,18 @@ h1 {
             <div class="vl" style="height:6px;"></div>
             <div style="width:100%; display:flex; flex-direction:column; gap:3px;">
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                <div style="flex:0 0 228px;"><div class="n n-ger">Gerencia de Corregimientos</div></div>
+                <div style="flex:0 0 228px;"><div class="n n-ger collapsible-header" data-target="ger-corregimientos">Gerencia de Corregimientos</div><div id="ger-corregimientos" class="collapse-content" style="margin-top:2px;"><div class="n n-sub" style="background:#9b7bc9;">Unidades de Planeación Local</div><div class="n n-sub">Gestión Territorial</div></div></div>
                 <div class="hl" style="width:18px; flex-shrink:0;"></div>
-                <div style="flex:0 0 210px;"><div class="n n-ger">Gerencia Ética</div></div>
+                <div style="flex:0 0 210px;"><div class="n n-ger collapsible-header" data-target="ger-etica">Gerencia Ética</div><div id="ger-etica" class="collapse-content"><div class="n n-sub">Programas de Integridad</div><div class="n n-sub">Formación Ciudadana</div></div></div>
                 <div style="flex:1;"></div>
               </div>
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                <div style="flex:0 0 275px;"><div class="n n-ger">Gerencia de Centro y Territorios Estratégicos</div></div>
+                <div style="flex:0 0 275px;"><div class="n n-ger collapsible-header" data-target="ger-centro">Gerencia de Centro y Territorios Estratégicos</div><div id="ger-centro" class="collapse-content"><div class="n n-sub">Proyectos de Renovación Urbana</div><div class="n n-sub">Gestión de Centros Históricos</div></div></div>
                 <div class="hl" style="width:18px; flex-shrink:0;"></div>
-                <div style="flex:1;"><div class="n n-ger">Gerencia de Diversidades Sexuales e Identidades de Género</div></div>
+                <div style="flex:1;"><div class="n n-ger collapsible-header" data-target="ger-diversidades">Gerencia de Diversidades Sexuales e Identidades de Género</div><div id="ger-diversidades" class="collapse-content"><div class="n n-sub">Políticas LGBTIQ+</div><div class="n n-sub">Atención a Víctimas</div></div></div>
               </div>
               <div style="display:flex; align-items:center;">
-                <div style="flex:0 0 228px;"><div class="n n-ger">Gerencia de Proyectos Estratégicos</div></div>
+                <div style="flex:0 0 228px;"><div class="n n-ger collapsible-header" data-target="ger-proyectos">Gerencia de Proyectos Estratégicos</div><div id="ger-proyectos" class="collapse-content"><div class="n n-sub">Megaproyectos</div><div class="n n-sub">Alianzas Público-Privadas</div></div></div>
                 <div style="flex:1;"></div>
               </div>
             </div>
@@ -437,21 +484,27 @@ h1 {
           <div style="padding-top:34px; flex-shrink:0; width:25px; display:flex; align-items:center;"><div class="hl" style="width:100%;"></div></div>
 
           <!-- DERECHA: Secretaría / Departamento Administrativo con su estructura -->
-          <div style="width:207px; flex-shrink:0; display:flex; flex-direction:column; gap:3px; padding-top:28px;">
-            <div class="n n-sec">Secretaría / Dpto. Administrativo</div>
-            <div class="n n-ger">Gerencia</div>
-            <div class="vl" style="height:5px;"></div>
-            <div class="n n-uae">Unidad Administrativa Especial</div>
-            <div style="display:flex; gap:3px;">
-              <div style="flex:1;"><div class="n n-sub">Subsecretaría / Subdirección</div></div>
-              <div style="flex:1;"><div class="n n-dir">Dirección</div></div>
-            </div>
-            <div class="vl" style="height:5px;"></div>
-            <div class="n n-com">Comisarías de Familia</div>
-            <div style="display:flex; gap:3px;">
-              <div style="flex:1;"><div class="n n-ads">Adscrito</div></div>
-              <div style="flex:1;"><div class="n n-vin">Vinculado</div></div>
-              <div style="flex:1;"><div class="n n-ind">Indirecto</div></div>
+          <div style="width:207px; flex-shrink:0; display:flex; flex-direction:column; gap:3px; padding-top:28px;" id="col-secretaria">
+            <div class="n n-sec collapsible-header" data-target="secretaria-content">Secretaría / Dpto. Administrativo</div>
+            <div id="secretaria-content" class="collapse-content">
+              <div class="n n-ger">Gerencia</div>
+              <div class="vl" style="height:5px;"></div>
+              <div class="n n-uae collapsible-header" data-target="uae-content">Unidad Administrativa Especial</div>
+              <div id="uae-content" class="collapse-content" style="margin-left:4px;">
+                <div style="display:flex; gap:3px;">
+                  <div style="flex:1;"><div class="n n-sub">Subsecretaría / Subdirección</div></div>
+                  <div style="flex:1;"><div class="n n-dir">Dirección</div></div>
+                </div>
+              </div>
+              <div class="vl" style="height:5px;"></div>
+              <div class="n n-com collapsible-header" data-target="comisarias-content">Comisarías de Familia</div>
+              <div id="comisarias-content" class="collapse-content">
+                <div style="display:flex; gap:3px;">
+                  <div style="flex:1;"><div class="n n-ads">Adscrito</div></div>
+                  <div style="flex:1;"><div class="n n-vin">Vinculado</div></div>
+                  <div style="flex:1;"><div class="n n-ind">Indirecto</div></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -460,29 +513,37 @@ h1 {
       <!-- FILA 1: PAZ, DERECHOS HUMANOS, SEGURIDAD, GESTIÓN HUMANA -->
       <div class="sec-box">
         <div class="sec-columns">
-          <div class="sec-col">
-            <div class="n n-sec">Paz y Derechos Humanos</div>
-            <div class="n n-sub">Justicia Transicional y Restaurativa</div>
-            <div class="n n-sub">Derechos Humanos y Construcción de Paz Ciudadana</div>
-            <div class="n n-sub">Defensa y Protección de la Población</div>
+          <div class="sec-col" id="col-paz">
+            <div class="n n-sec collapsible-header" data-target="paz-content">Paz y Derechos Humanos</div>
+            <div id="paz-content" class="collapse-content">
+              <div class="n n-sub">Justicia Transicional y Restaurativa</div>
+              <div class="n n-sub">Derechos Humanos y Construcción de Paz Ciudadana</div>
+              <div class="n n-sub">Defensa y Protección de la Población</div>
+            </div>
           </div>
-          <div class="sec-col">
-            <div class="n n-sec">Seguridad y Convivencia</div>
-            <div class="n n-sub">Seguridad y Convivencia</div>
-            <div class="n n-sub">Prevención del Daño Antijurídico</div>
-            <div class="n n-dir">Dirección de Control Disciplinario Interno</div>
+          <div class="sec-col" id="col-seguridad">
+            <div class="n n-sec collapsible-header" data-target="seguridad-content">Seguridad y Convivencia</div>
+            <div id="seguridad-content" class="collapse-content">
+              <div class="n n-sub">Seguridad y Convivencia</div>
+              <div class="n n-sub">Prevención del Daño Antijurídico</div>
+              <div class="n n-dir">Dirección de Control Disciplinario Interno</div>
+            </div>
           </div>
-          <div class="sec-col">
-            <div class="n n-sec">Gestión Humana y Desarrollo</div>
-            <div class="n n-sub">Gestión Humana</div>
-            <div class="n n-sub">Desarrollo Institucional</div>
-            <div class="n n-sub">Planificación, Control y Competitividad Turística</div>
-            <div class="n n-sub">Promoción Turística y Entretenimiento</div>
+          <div class="sec-col" id="col-gestion">
+            <div class="n n-sec collapsible-header" data-target="gestion-content">Gestión Humana y Desarrollo</div>
+            <div id="gestion-content" class="collapse-content">
+              <div class="n n-sub">Gestión Humana</div>
+              <div class="n n-sub">Desarrollo Institucional</div>
+              <div class="n n-sub">Planificación, Control y Competitividad Turística</div>
+              <div class="n n-sub">Promoción Turística y Entretenimiento</div>
+            </div>
           </div>
-          <div class="sec-col">
-            <div class="n n-sec">Servicios Sociales</div>
-            <div class="n n-sub">Servicios Sociales</div>
-            <div class="n n-ger">Gerencia de Movilidad Humana</div>
+          <div class="sec-col" id="col-sociales">
+            <div class="n n-sec collapsible-header" data-target="sociales-content">Servicios Sociales</div>
+            <div id="sociales-content" class="collapse-content">
+              <div class="n n-sub">Servicios Sociales</div>
+              <div class="n n-ger">Gerencia de Movilidad Humana</div>
+            </div>
           </div>
         </div>
       </div>
@@ -490,61 +551,75 @@ h1 {
       <!-- FILA 2: MOVILIDAD, MEDIO AMBIENTE, DESARROLLO ECONÓMICO, INNOVACIÓN -->
       <div class="sec-box">
         <div class="sec-columns">
-          <div class="sec-col">
-            <div class="n n-sec">Movilidad</div>
-            <div class="n n-sub">Movilidad</div>
-            <div class="n n-sub">Seguridad Vial y Control</div>
-            <div class="n n-sub">Técnica (Apoyo)</div>
+          <div class="sec-col" id="col-movilidad">
+            <div class="n n-sec collapsible-header" data-target="movilidad-content">Movilidad</div>
+            <div id="movilidad-content" class="collapse-content">
+              <div class="n n-sub">Movilidad</div>
+              <div class="n n-sub">Seguridad Vial y Control</div>
+              <div class="n n-sub">Técnica (Apoyo)</div>
+            </div>
           </div>
-          <div class="sec-col">
-            <div class="n n-sec">Medio Ambiente</div>
-            <div class="n n-sub">Recursos Naturales Renovables</div>
-            <div class="n n-sub">Protección y Bienestar Animal</div>
+          <div class="sec-col" id="col-ambiente">
+            <div class="n n-sec collapsible-header" data-target="ambiente-content">Medio Ambiente</div>
+            <div id="ambiente-content" class="collapse-content">
+              <div class="n n-sub">Recursos Naturales Renovables</div>
+              <div class="n n-sub">Protección y Bienestar Animal</div>
+            </div>
           </div>
-          <div class="sec-col">
-            <div class="n n-sec">Desarrollo Económico y Rural</div>
-            <div class="n n-sub">Desarrollo Económico</div>
-            <div class="n n-sub">Desarrollo Rural</div>
-            <div class="n n-sub">Creación y Fortalecimiento Empresarial</div>
+          <div class="sec-col" id="col-economico">
+            <div class="n n-sec collapsible-header" data-target="economico-content">Desarrollo Económico y Rural</div>
+            <div id="economico-content" class="collapse-content">
+              <div class="n n-sub">Desarrollo Económico</div>
+              <div class="n n-sub">Desarrollo Rural</div>
+              <div class="n n-sub">Creación y Fortalecimiento Empresarial</div>
+            </div>
           </div>
-          <div class="sec-col">
-            <div class="n n-sec">Innovación Digital</div>
-            <div class="n n-sub">Servicios de Tecnología de la Información</div>
-            <div class="n n-sub">Ciudad Inteligente</div>
-            <div class="n n-sub">Innovación Digital</div>
+          <div class="sec-col" id="col-innovacion">
+            <div class="n n-sec collapsible-header" data-target="innovacion-content">Innovación Digital</div>
+            <div id="innovacion-content" class="collapse-content">
+              <div class="n n-sub">Servicios de Tecnología de la Información</div>
+              <div class="n n-sub">Ciudad Inteligente</div>
+              <div class="n n-sub">Innovación Digital</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ENTES DESCENTRALIZADOS ADSCRITOS (Nivel 1) -->
+      <!-- ENTES DESCENTRALIZADOS ADSCRITOS Y VINCULADOS (con colapso) -->
       <div class="sec-box">
-        <div style="display:flex; gap:2px; align-items:flex-start; flex-wrap:wrap;">
-          <div class="ent-col"><div class="n n-ads">Colegio Mayor de Antioquia</div><div class="n n-ads">Museo Casa de la Memoria</div><div class="n n-ads">Isvimed</div></div>
-          <div class="ent-col"><div class="n n-ads">I.U. Pascual Bravo</div><div class="n n-ads">Hospital General</div><div class="n n-ads">Agencia APP</div></div>
-          <div class="ent-col"><div class="n n-ads">Metrosalud</div><div class="n n-ads">Fonalmed</div><div class="n n-ads">APEV</div></div>
-          <div class="ent-col"><div class="n n-ads">Biblioteca Pública Piloto</div><div class="n n-ads">Parque Explora</div></div>
-          <div class="col-div"></div>
-          <div class="ent-col"><div class="n n-vin">Metro de Medellín</div><div class="n n-vin">Terminales de Transporte</div><div class="n n-vin">EDU</div></div>
-          <div class="ent-col"><div class="n n-vin">ESU</div><div class="n n-vin">Ruta N</div><div class="n n-vin">Telemedellín</div></div>
-          <div class="ent-col"><div class="n n-vin">Créame</div><div class="n n-vin">Teletantoquía</div><div class="n n-vin">Fondo de Garantías</div></div>
+        <div class="collapsible-header" data-target="entes-adscritos" style="display:flex; justify-content:space-between; background:#eef2f5; padding:4px 8px; margin-bottom:6px; border-radius:6px; font-weight:bold; font-size:12px;">🏛️ Entes descentralizados adscritos y vinculados</div>
+        <div id="entes-adscritos" class="collapse-content">
+          <div style="display:flex; gap:2px; align-items:flex-start; flex-wrap:wrap;">
+            <div class="ent-col"><div class="n n-ads">Colegio Mayor de Antioquia</div><div class="n n-ads">Museo Casa de la Memoria</div><div class="n n-ads">Isvimed</div></div>
+            <div class="ent-col"><div class="n n-ads">I.U. Pascual Bravo</div><div class="n n-ads">Hospital General</div><div class="n n-ads">Agencia APP</div></div>
+            <div class="ent-col"><div class="n n-ads">Metrosalud</div><div class="n n-ads">Fonalmed</div><div class="n n-ads">APEV</div></div>
+            <div class="ent-col"><div class="n n-ads">Biblioteca Pública Piloto</div><div class="n n-ads">Parque Explora</div></div>
+            <div class="col-div"></div>
+            <div class="ent-col"><div class="n n-vin">Metro de Medellín</div><div class="n n-vin">Terminales de Transporte</div><div class="n n-vin">EDU</div></div>
+            <div class="ent-col"><div class="n n-vin">ESU</div><div class="n n-vin">Ruta N</div><div class="n n-vin">Telemedellín</div></div>
+            <div class="ent-col"><div class="n n-vin">Créame</div><div class="n n-vin">Teletantoquía</div><div class="n n-vin">Fondo de Garantías</div></div>
+          </div>
         </div>
       </div>
 
-      <!-- ENTIDADES INDIRECTAS / CORPORACIONES / FUNDACIONES -->
+      <!-- ENTIDADES INDIRECTAS / CORPORACIONES / FUNDACIONES (con colapso) -->
       <div class="sec-box">
-        <div style="display:flex; flex-wrap:wrap; gap:3px;">
-          <div class="n n-ind" style="flex:1; min-width:100px;">Ferrocarril de Antioquia</div>
-          <div class="n n-ind" style="flex:1; min-width:100px;">Corporación Hospital Infantil Concepción de Medellín</div>
-          <div class="n n-ind" style="flex:1; min-width:100px;">Corporación Cuenca Verde</div>
-          <div class="n n-ind" style="flex:1; min-width:100px;">Corporación Parque Arví</div>
-          <div class="n n-ind" style="flex:1; min-width:100px;">Fundación Jardín Botánico</div>
-          <div class="n n-ind" style="flex:1; min-width:80px;">Bureau</div>
+        <div class="collapsible-header" data-target="entes-indirectos" style="display:flex; justify-content:space-between; background:#eef2f5; padding:4px 8px; margin-bottom:6px; border-radius:6px; font-weight:bold; font-size:12px;">🌿 Entes descentralizados indirectos y corporaciones</div>
+        <div id="entes-indirectos" class="collapse-content">
+          <div style="display:flex; flex-wrap:wrap; gap:3px;">
+            <div class="n n-ind" style="flex:1; min-width:100px;">Ferrocarril de Antioquia</div>
+            <div class="n n-ind" style="flex:1; min-width:100px;">Corporación Hospital Infantil Concepción de Medellín</div>
+            <div class="n n-ind" style="flex:1; min-width:100px;">Corporación Cuenca Verde</div>
+            <div class="n n-ind" style="flex:1; min-width:100px;">Corporación Parque Arví</div>
+            <div class="n n-ind" style="flex:1; min-width:100px;">Fundación Jardín Botánico</div>
+            <div class="n n-ind" style="flex:1; min-width:80px;">Bureau</div>
+          </div>
         </div>
       </div>
 
-      <!-- NOTA ADICIONAL: LISTA COMPLETA DE ENTIDADES DEL ARCHIVO ORIGINAL -->
+      <!-- NOTA ADICIONAL -->
       <div class="sec-box" style="background:#f2f6fa; text-align:center; padding:6px;">
-        <div style="font-size:8px; font-weight:600; color:#2c5a7a;">✅ Incluye todas las dependencias: Gerencia de Movilidad Humana, Servicios Sociales, Recursos Naturales, Bienestar Animal, Técnica, Ciudad Inteligente, Innovación Digital, Desarrollo Rural, Fonalmed, APEV, Colegio Mayor, Museo Casa de la Memoria, Isvimed, Ferrocarril de Antioquia, Parque Explora, I.U. Pascual Bravo, Hospital General, Agencia APP, Corporación Infantil, Cuenca Verde, Parque Arví, Jardín Botánico, Biblioteca Pública Piloto, Metrosalud, ESU, EDU, Metro, Terminales, Ruta N, Telemedellín, Créame, Teletantoquía, Fondo de Garantías, Bureau.</div>
+        <div style="font-size:8px; font-weight:600; color:#2c5a7a;">✅ Haz clic en cualquier título con ▼ para expandir/colapsar sus dependencias.</div>
       </div>
     </div>
   </div>
@@ -552,6 +627,7 @@ h1 {
 
 <script>
 (function () {
+  // Zoom y arrastre (igual que antes)
   let scale = 0.55;
   const chart = document.getElementById('chart');
   const wrapper = document.getElementById('wrapper');
@@ -615,6 +691,53 @@ h1 {
   window.addEventListener('resize', () => {
     if (scale <= 0.62) fitInitialZoom();
   });
+
+  // ---------- FUNCIONALIDAD DE COLAPSO ----------
+  function initCollapsible() {
+    const headers = document.querySelectorAll('.collapsible-header');
+    headers.forEach(header => {
+      const targetId = header.getAttribute('data-target');
+      if (!targetId) return;
+      const content = document.getElementById(targetId);
+      if (!content) return;
+
+      // Agregar icono si no existe
+      if (!header.querySelector('.collapse-icon')) {
+        const icon = document.createElement('span');
+        icon.className = 'collapse-icon expanded';
+        icon.textContent = '▼';
+        icon.style.marginRight = '4px';
+        header.insertBefore(icon, header.firstChild);
+        // Guardar referencia
+        header.icon = icon;
+      }
+
+      // Estado inicial: expandido por defecto
+      let expanded = true;
+      content.classList.remove('collapsed');
+      header.icon.textContent = '▼';
+      header.icon.classList.add('expanded');
+
+      header.addEventListener('click', (e) => {
+        e.stopPropagation();
+        expanded = !expanded;
+        if (expanded) {
+          content.classList.remove('collapsed');
+          header.icon.textContent = '▼';
+          header.icon.classList.remove('collapsed');
+          header.icon.classList.add('expanded');
+        } else {
+          content.classList.add('collapsed');
+          header.icon.textContent = '▶';
+          header.icon.classList.remove('expanded');
+          header.icon.classList.add('collapsed');
+        }
+      });
+    });
+  }
+
+  // Inicializar después de que el DOM esté listo
+  initCollapsible();
 })();
 </script>
 </body>
