@@ -21,7 +21,8 @@
   --surface: #f7fafc;
   --ink: #0f2031;
   --muted: #4b5f73;
-  --line: #70879d;
+  --line: #2c4f6e;
+  --line-light: #5a7c9a;
   --c-sec: #db5b4f;
   --c-ger: #6a4ab8;
   --c-uae: #1f7575;
@@ -31,6 +32,8 @@
   --c-ads: #cf8428;
   --c-vin: #2f6ec7;
   --c-ind: #43ab55;
+  --highlight: #ffd966;
+  --highlight-text: #1a472a;
 }
 
 html, body {
@@ -53,7 +56,7 @@ body {
   width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   gap: 12px;
   padding: 14px;
 }
@@ -82,6 +85,56 @@ body {
   margin-top: 2px;
   font-size: 0.76rem;
   color: rgba(238, 245, 252, 0.84);
+}
+
+.search-bar {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 40px;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  backdrop-filter: blur(4px);
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  padding: 8px 0;
+  width: 200px;
+  outline: none;
+  font-family: Manrope, sans-serif;
+  color: #1f3e53;
+}
+
+.search-bar input::placeholder {
+  color: #7a8e9e;
+}
+
+.search-bar button {
+  background: #1f7575;
+  border: none;
+  border-radius: 30px;
+  padding: 6px 14px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.search-bar button:hover {
+  background: #0e5a5a;
+}
+
+.search-results {
+  font-size: 0.7rem;
+  color: #eaf3fb;
+  background: rgba(0,0,0,0.4);
+  padding: 4px 10px;
+  border-radius: 20px;
 }
 
 .helper {
@@ -226,6 +279,15 @@ h1 {
 .n-vin { background: var(--c-vin); }
 .n-ind { background: var(--c-ind); }
 
+/* Estilos para búsqueda resaltada */
+.highlight {
+  background-color: var(--highlight);
+  color: var(--highlight-text);
+  box-shadow: 0 0 0 2px #ffb347;
+  transition: 0.1s;
+  font-weight: 900;
+}
+
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -243,23 +305,28 @@ h1 {
   white-space: nowrap;
 }
 
+/* Líneas más visibles */
+.vl {
+  width: 2px;
+  background: var(--line);
+  margin: 0 auto;
+  opacity: 1;
+  box-shadow: 0 0 1px rgba(0,0,0,0.3);
+}
+
+.hl {
+  height: 2px;
+  background: var(--line);
+  opacity: 1;
+  box-shadow: 0 0 1px rgba(0,0,0,0.3);
+}
+
 .sec-box {
   border: 1.5px solid #afbcc8;
   border-radius: 9px;
   padding: 7px 6px 6px;
   margin-bottom: 5px;
   background: #ffffff;
-}
-
-.vl {
-  width: 1px;
-  background: var(--line);
-  margin: 0 auto;
-}
-
-.hl {
-  height: 1px;
-  background: var(--line);
 }
 
 .sec-columns {
@@ -278,11 +345,12 @@ h1 {
 }
 
 .col-div {
-  width: 1.5px;
-  background: #a8b8c7;
+  width: 2px;
+  background: #2c4f6e;
   align-self: stretch;
   flex-shrink: 0;
   margin: 0 1px;
+  opacity: 0.9;
 }
 
 .ent-col {
@@ -293,7 +361,7 @@ h1 {
   min-width: 100px;
 }
 
-/* Estilos para los botones de colapso */
+/* Estilos para botones de colapso */
 .collapsible-header {
   cursor: pointer;
   display: flex;
@@ -301,6 +369,7 @@ h1 {
   justify-content: space-between;
   gap: 6px;
   width: 100%;
+  text-align: center;
 }
 
 .collapse-icon {
@@ -333,9 +402,10 @@ h1 {
   display: none;
 }
 
-/* Ajustes para mantener el mismo aspecto */
+/* Ajuste centrado para los textos dentro de collapsible */
 .n-sec.collapsible-header, .n-ger.collapsible-header, .n-uae.collapsible-header {
-  padding-right: 4px;
+  justify-content: center;
+  gap: 8px;
 }
 
 @keyframes panelEnter {
@@ -404,9 +474,13 @@ h1 {
   <header class="topbar">
     <div class="title-wrap">
       <h1>Estructura Administrativa del Distrito de Medellín</h1>
-      <p>Jerarquía completa · Haz clic en los títulos para expandir/colapsar dependencias</p>
+      <p>Jerarquía completa · Colapsa/expande secciones · Busca dependencias</p>
     </div>
-    <div class="helper">🖱️ Arrastra para mover · Ctrl + rueda para zoom · 🔽 Colapsa secciones</div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar dependencia... (ej: Movilidad, Paz)">
+      <button id="searchBtn">🔍 Buscar</button>
+    </div>
+    <div class="helper">🖱️ Arrastra · Ctrl+rueda zoom · Click títulos para colapsar/expandir</div>
   </header>
 
   <div id="ctrl">
@@ -442,7 +516,7 @@ h1 {
           <!-- IZQUIERDA: Gobierno y Gestión del Gabinete -->
           <div style="width:162px; flex-shrink:0; display:flex; flex-direction:column; gap:2px; padding-top:28px;" id="col-gabinete">
             <div class="n n-sec collapsible-header" data-target="gabinete-content">Gobierno y Gestión del Gabinete</div>
-            <div id="gabinete-content" class="collapse-content">
+            <div id="gabinete-content" class="collapse-content collapsed">
               <div class="vl" style="height:5px;"></div>
               <div class="n n-sub">Privada</div>
               <div class="vl" style="height:5px;"></div>
@@ -464,18 +538,18 @@ h1 {
             <div class="vl" style="height:6px;"></div>
             <div style="width:100%; display:flex; flex-direction:column; gap:3px;">
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                <div style="flex:0 0 228px;"><div class="n n-ger collapsible-header" data-target="ger-corregimientos">Gerencia de Corregimientos</div><div id="ger-corregimientos" class="collapse-content" style="margin-top:2px;"><div class="n n-sub" style="background:#9b7bc9;">Unidades de Planeación Local</div><div class="n n-sub">Gestión Territorial</div></div></div>
+                <div style="flex:0 0 228px;"><div class="n n-ger collapsible-header" data-target="ger-corregimientos">Gerencia de Corregimientos</div><div id="ger-corregimientos" class="collapse-content collapsed" style="margin-top:2px;"><div class="n n-sub" style="background:#9b7bc9;">Unidades de Planeación Local</div><div class="n n-sub">Gestión Territorial</div></div></div>
                 <div class="hl" style="width:18px; flex-shrink:0;"></div>
-                <div style="flex:0 0 210px;"><div class="n n-ger collapsible-header" data-target="ger-etica">Gerencia Ética</div><div id="ger-etica" class="collapse-content"><div class="n n-sub">Programas de Integridad</div><div class="n n-sub">Formación Ciudadana</div></div></div>
+                <div style="flex:0 0 210px;"><div class="n n-ger collapsible-header" data-target="ger-etica">Gerencia Ética</div><div id="ger-etica" class="collapse-content collapsed"><div class="n n-sub">Programas de Integridad</div><div class="n n-sub">Formación Ciudadana</div></div></div>
                 <div style="flex:1;"></div>
               </div>
               <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
-                <div style="flex:0 0 275px;"><div class="n n-ger collapsible-header" data-target="ger-centro">Gerencia de Centro y Territorios Estratégicos</div><div id="ger-centro" class="collapse-content"><div class="n n-sub">Proyectos de Renovación Urbana</div><div class="n n-sub">Gestión de Centros Históricos</div></div></div>
+                <div style="flex:0 0 275px;"><div class="n n-ger collapsible-header" data-target="ger-centro">Gerencia de Centro y Territorios Estratégicos</div><div id="ger-centro" class="collapse-content collapsed"><div class="n n-sub">Proyectos de Renovación Urbana</div><div class="n n-sub">Gestión de Centros Históricos</div></div></div>
                 <div class="hl" style="width:18px; flex-shrink:0;"></div>
-                <div style="flex:1;"><div class="n n-ger collapsible-header" data-target="ger-diversidades">Gerencia de Diversidades Sexuales e Identidades de Género</div><div id="ger-diversidades" class="collapse-content"><div class="n n-sub">Políticas LGBTIQ+</div><div class="n n-sub">Atención a Víctimas</div></div></div>
+                <div style="flex:1;"><div class="n n-ger collapsible-header" data-target="ger-diversidades">Gerencia de Diversidades Sexuales e Identidades de Género</div><div id="ger-diversidades" class="collapse-content collapsed"><div class="n n-sub">Políticas LGBTIQ+</div><div class="n n-sub">Atención a Víctimas</div></div></div>
               </div>
               <div style="display:flex; align-items:center;">
-                <div style="flex:0 0 228px;"><div class="n n-ger collapsible-header" data-target="ger-proyectos">Gerencia de Proyectos Estratégicos</div><div id="ger-proyectos" class="collapse-content"><div class="n n-sub">Megaproyectos</div><div class="n n-sub">Alianzas Público-Privadas</div></div></div>
+                <div style="flex:0 0 228px;"><div class="n n-ger collapsible-header" data-target="ger-proyectos">Gerencia de Proyectos Estratégicos</div><div id="ger-proyectos" class="collapse-content collapsed"><div class="n n-sub">Megaproyectos</div><div class="n n-sub">Alianzas Público-Privadas</div></div></div>
                 <div style="flex:1;"></div>
               </div>
             </div>
@@ -486,11 +560,11 @@ h1 {
           <!-- DERECHA: Secretaría / Departamento Administrativo con su estructura -->
           <div style="width:207px; flex-shrink:0; display:flex; flex-direction:column; gap:3px; padding-top:28px;" id="col-secretaria">
             <div class="n n-sec collapsible-header" data-target="secretaria-content">Secretaría / Dpto. Administrativo</div>
-            <div id="secretaria-content" class="collapse-content">
+            <div id="secretaria-content" class="collapse-content collapsed">
               <div class="n n-ger">Gerencia</div>
               <div class="vl" style="height:5px;"></div>
               <div class="n n-uae collapsible-header" data-target="uae-content">Unidad Administrativa Especial</div>
-              <div id="uae-content" class="collapse-content" style="margin-left:4px;">
+              <div id="uae-content" class="collapse-content collapsed" style="margin-left:4px;">
                 <div style="display:flex; gap:3px;">
                   <div style="flex:1;"><div class="n n-sub">Subsecretaría / Subdirección</div></div>
                   <div style="flex:1;"><div class="n n-dir">Dirección</div></div>
@@ -498,7 +572,7 @@ h1 {
               </div>
               <div class="vl" style="height:5px;"></div>
               <div class="n n-com collapsible-header" data-target="comisarias-content">Comisarías de Familia</div>
-              <div id="comisarias-content" class="collapse-content">
+              <div id="comisarias-content" class="collapse-content collapsed">
                 <div style="display:flex; gap:3px;">
                   <div style="flex:1;"><div class="n n-ads">Adscrito</div></div>
                   <div style="flex:1;"><div class="n n-vin">Vinculado</div></div>
@@ -515,7 +589,7 @@ h1 {
         <div class="sec-columns">
           <div class="sec-col" id="col-paz">
             <div class="n n-sec collapsible-header" data-target="paz-content">Paz y Derechos Humanos</div>
-            <div id="paz-content" class="collapse-content">
+            <div id="paz-content" class="collapse-content collapsed">
               <div class="n n-sub">Justicia Transicional y Restaurativa</div>
               <div class="n n-sub">Derechos Humanos y Construcción de Paz Ciudadana</div>
               <div class="n n-sub">Defensa y Protección de la Población</div>
@@ -523,7 +597,7 @@ h1 {
           </div>
           <div class="sec-col" id="col-seguridad">
             <div class="n n-sec collapsible-header" data-target="seguridad-content">Seguridad y Convivencia</div>
-            <div id="seguridad-content" class="collapse-content">
+            <div id="seguridad-content" class="collapse-content collapsed">
               <div class="n n-sub">Seguridad y Convivencia</div>
               <div class="n n-sub">Prevención del Daño Antijurídico</div>
               <div class="n n-dir">Dirección de Control Disciplinario Interno</div>
@@ -531,7 +605,7 @@ h1 {
           </div>
           <div class="sec-col" id="col-gestion">
             <div class="n n-sec collapsible-header" data-target="gestion-content">Gestión Humana y Desarrollo</div>
-            <div id="gestion-content" class="collapse-content">
+            <div id="gestion-content" class="collapse-content collapsed">
               <div class="n n-sub">Gestión Humana</div>
               <div class="n n-sub">Desarrollo Institucional</div>
               <div class="n n-sub">Planificación, Control y Competitividad Turística</div>
@@ -540,7 +614,7 @@ h1 {
           </div>
           <div class="sec-col" id="col-sociales">
             <div class="n n-sec collapsible-header" data-target="sociales-content">Servicios Sociales</div>
-            <div id="sociales-content" class="collapse-content">
+            <div id="sociales-content" class="collapse-content collapsed">
               <div class="n n-sub">Servicios Sociales</div>
               <div class="n n-ger">Gerencia de Movilidad Humana</div>
             </div>
@@ -553,7 +627,7 @@ h1 {
         <div class="sec-columns">
           <div class="sec-col" id="col-movilidad">
             <div class="n n-sec collapsible-header" data-target="movilidad-content">Movilidad</div>
-            <div id="movilidad-content" class="collapse-content">
+            <div id="movilidad-content" class="collapse-content collapsed">
               <div class="n n-sub">Movilidad</div>
               <div class="n n-sub">Seguridad Vial y Control</div>
               <div class="n n-sub">Técnica (Apoyo)</div>
@@ -561,14 +635,14 @@ h1 {
           </div>
           <div class="sec-col" id="col-ambiente">
             <div class="n n-sec collapsible-header" data-target="ambiente-content">Medio Ambiente</div>
-            <div id="ambiente-content" class="collapse-content">
+            <div id="ambiente-content" class="collapse-content collapsed">
               <div class="n n-sub">Recursos Naturales Renovables</div>
               <div class="n n-sub">Protección y Bienestar Animal</div>
             </div>
           </div>
           <div class="sec-col" id="col-economico">
             <div class="n n-sec collapsible-header" data-target="economico-content">Desarrollo Económico y Rural</div>
-            <div id="economico-content" class="collapse-content">
+            <div id="economico-content" class="collapse-content collapsed">
               <div class="n n-sub">Desarrollo Económico</div>
               <div class="n n-sub">Desarrollo Rural</div>
               <div class="n n-sub">Creación y Fortalecimiento Empresarial</div>
@@ -576,7 +650,7 @@ h1 {
           </div>
           <div class="sec-col" id="col-innovacion">
             <div class="n n-sec collapsible-header" data-target="innovacion-content">Innovación Digital</div>
-            <div id="innovacion-content" class="collapse-content">
+            <div id="innovacion-content" class="collapse-content collapsed">
               <div class="n n-sub">Servicios de Tecnología de la Información</div>
               <div class="n n-sub">Ciudad Inteligente</div>
               <div class="n n-sub">Innovación Digital</div>
@@ -588,7 +662,7 @@ h1 {
       <!-- ENTES DESCENTRALIZADOS ADSCRITOS Y VINCULADOS (con colapso) -->
       <div class="sec-box">
         <div class="collapsible-header" data-target="entes-adscritos" style="display:flex; justify-content:space-between; background:#eef2f5; padding:4px 8px; margin-bottom:6px; border-radius:6px; font-weight:bold; font-size:12px;">🏛️ Entes descentralizados adscritos y vinculados</div>
-        <div id="entes-adscritos" class="collapse-content">
+        <div id="entes-adscritos" class="collapse-content collapsed">
           <div style="display:flex; gap:2px; align-items:flex-start; flex-wrap:wrap;">
             <div class="ent-col"><div class="n n-ads">Colegio Mayor de Antioquia</div><div class="n n-ads">Museo Casa de la Memoria</div><div class="n n-ads">Isvimed</div></div>
             <div class="ent-col"><div class="n n-ads">I.U. Pascual Bravo</div><div class="n n-ads">Hospital General</div><div class="n n-ads">Agencia APP</div></div>
@@ -605,7 +679,7 @@ h1 {
       <!-- ENTIDADES INDIRECTAS / CORPORACIONES / FUNDACIONES (con colapso) -->
       <div class="sec-box">
         <div class="collapsible-header" data-target="entes-indirectos" style="display:flex; justify-content:space-between; background:#eef2f5; padding:4px 8px; margin-bottom:6px; border-radius:6px; font-weight:bold; font-size:12px;">🌿 Entes descentralizados indirectos y corporaciones</div>
-        <div id="entes-indirectos" class="collapse-content">
+        <div id="entes-indirectos" class="collapse-content collapsed">
           <div style="display:flex; flex-wrap:wrap; gap:3px;">
             <div class="n n-ind" style="flex:1; min-width:100px;">Ferrocarril de Antioquia</div>
             <div class="n n-ind" style="flex:1; min-width:100px;">Corporación Hospital Infantil Concepción de Medellín</div>
@@ -619,7 +693,7 @@ h1 {
 
       <!-- NOTA ADICIONAL -->
       <div class="sec-box" style="background:#f2f6fa; text-align:center; padding:6px;">
-        <div style="font-size:8px; font-weight:600; color:#2c5a7a;">✅ Haz clic en cualquier título con ▼ para expandir/colapsar sus dependencias.</div>
+        <div style="font-size:8px; font-weight:600; color:#2c5a7a;">✅ Haz clic en cualquier título con ▼ para expandir/colapsar sus dependencias. Usa el buscador para encontrar cualquier dependencia.</div>
       </div>
     </div>
   </div>
@@ -627,7 +701,7 @@ h1 {
 
 <script>
 (function () {
-  // Zoom y arrastre (igual que antes)
+  // Zoom y arrastre
   let scale = 0.55;
   const chart = document.getElementById('chart');
   const wrapper = document.getElementById('wrapper');
@@ -692,7 +766,7 @@ h1 {
     if (scale <= 0.62) fitInitialZoom();
   });
 
-  // ---------- FUNCIONALIDAD DE COLAPSO ----------
+  // Función de colapso/expansión
   function initCollapsible() {
     const headers = document.querySelectorAll('.collapsible-header');
     headers.forEach(header => {
@@ -704,19 +778,18 @@ h1 {
       // Agregar icono si no existe
       if (!header.querySelector('.collapse-icon')) {
         const icon = document.createElement('span');
-        icon.className = 'collapse-icon expanded';
-        icon.textContent = '▼';
-        icon.style.marginRight = '4px';
+        icon.className = 'collapse-icon collapsed'; // iniciar colapsado
+        icon.textContent = '▶';
         header.insertBefore(icon, header.firstChild);
-        // Guardar referencia
         header.icon = icon;
       }
 
-      // Estado inicial: expandido por defecto
-      let expanded = true;
-      content.classList.remove('collapsed');
-      header.icon.textContent = '▼';
-      header.icon.classList.add('expanded');
+      // Estado inicial: colapsado
+      let expanded = false;
+      content.classList.add('collapsed');
+      header.icon.textContent = '▶';
+      header.icon.classList.add('collapsed');
+      header.icon.classList.remove('expanded');
 
       header.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -736,8 +809,63 @@ h1 {
     });
   }
 
-  // Inicializar después de que el DOM esté listo
+  // Buscador de dependencias
+  function setupSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+
+    function performSearch() {
+      const term = searchInput.value.trim().toLowerCase();
+      // Remover resaltados previos
+      document.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
+
+      if (term === '') return;
+
+      // Buscar en todos los elementos con clase .n (nodos)
+      const nodes = document.querySelectorAll('.n');
+      let found = false;
+      nodes.forEach(node => {
+        const text = node.textContent.toLowerCase();
+        if (text.includes(term)) {
+          node.classList.add('highlight');
+          found = true;
+
+          // Expandir las secciones colapsadas que contengan este nodo
+          let parent = node.parentElement;
+          while (parent && parent !== document.body) {
+            // Si es un collapse-content, buscar su header y expandir
+            if (parent.classList && parent.classList.contains('collapse-content')) {
+              const targetId = parent.id;
+              const header = document.querySelector(`.collapsible-header[data-target="${targetId}"]`);
+              if (header && header.icon && header.icon.classList.contains('collapsed')) {
+                // Simular click para expandir
+                header.click();
+              }
+            }
+            parent = parent.parentElement;
+          }
+        }
+      });
+
+      // Si se encontró, opcionalmente hacer scroll al primer resultado
+      if (found) {
+        const firstHighlight = document.querySelector('.highlight');
+        if (firstHighlight) {
+          firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        alert(`No se encontró "${searchInput.value}"`);
+      }
+    }
+
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch();
+    });
+  }
+
   initCollapsible();
+  setupSearch();
 })();
 </script>
 </body>
